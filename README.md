@@ -13,5 +13,5 @@ Date: 30.05.2023
 ## Running the project
 ```bash
 cd build/classes/java/main
-java -cp $(pwd) org.example.Main
+java -cp $(pwd) com.craftinginterpreters.lox.Lox
 ```
