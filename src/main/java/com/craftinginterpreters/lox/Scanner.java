@@ -53,8 +53,8 @@ public final class Scanner {
             // One or two character lexemes.
             case '(' -> addToken(LEFT_PAREN);
             case ')' -> addToken(RIGHT_PAREN);
-            case '[' -> addToken(LEFT_BRACE);
-            case ']' -> addToken(RIGHT_BRACE);
+            case '{' -> addToken(LEFT_BRACE);
+            case '}' -> addToken(RIGHT_BRACE);
             case ',' -> addToken(COMMA);
             case '.' -> addToken(DOT);
             case '-' -> addToken(MINUS);
@@ -65,10 +65,14 @@ public final class Scanner {
             case '=' -> addToken(match('=') ? EQUAL_EQUAL : EQUAL);
             case '<' -> addToken(match('=') ? LESS_EQUAL : LESS);
             case '>' -> addToken(match('=') ? GREATER_EQUAL : GREATER);
-            // Look out for comments!
+            // Comments (and division symbol).
             case '/' -> {
+                // Single line comment
                 if (match('/')) {
                     while (peek() != '\n' && !isAtEnd()) advance();
+                // C-style block comments.
+                } if (match('*')) {
+                    blockComment();
                 } else {
                     addToken(SLASH);
                 }
@@ -82,7 +86,7 @@ public final class Scanner {
                 if (isDigit(c)) {
                     number();
                 } else if (isAlpha(c)) {
-                    identifier();
+                    identifierOrKeyword();
                 } else {
                     Lox.error(line, "Unexpected character.");
                 }
@@ -132,6 +136,7 @@ public final class Scanner {
         }
         if (isAtEnd()) {
             Lox.error(line, "Unterminated string.");
+            return;
         }
         advance(); // The closing quote.
         String value = source.substring(start + 1, current - 1); // Trim surrounding quotes.
@@ -153,11 +158,25 @@ public final class Scanner {
         addToken(NUMBER, value);
     }
 
-    private void identifier() {
+    private void identifierOrKeyword() {
         while (isAlphanumeric(peek())) advance();
         String text = source.substring(start, current);
         TokenType type = KEYWORDS.getOrDefault(text, IDENTIFIER);
         addToken(type);
+    }
+
+    private void blockComment() {
+        while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()) {
+            if (peek() == '\n') line++;
+            advance();
+        }
+        if (isAtEnd()) {
+            Lox.error(line, "Unterminated block comment.");
+            return;
+        }
+        // Consume closing '*/'.
+        advance();
+        advance();
     }
 
     private boolean isDigit(char c) {

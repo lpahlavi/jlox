@@ -11,7 +11,13 @@ Date: 30.05.2023
 ```
 
 ## Running the project
+
+Run interactive prompt:
 ```bash
-cd build/classes/java/main
-java -cp $(pwd) com.craftinginterpreters.lox.Lox
+java -cp build/classes/java/main com.craftinginterpreters.lox.Lox
+```
+
+Run Lox file:
+```bash
+java -cp build/classes/java/main com.craftinginterpreters.lox.Lox <file>
 ```
