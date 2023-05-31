@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public final class Token {
-    private final TokenType type;
-    private final String lexeme;
-    private final Object literal;
-    @Getter
-    private final int line;
+    final TokenType type;
+    final String lexeme;
+    final Object literal;
+    final int line;
 
     @Override
     public String toString () {
