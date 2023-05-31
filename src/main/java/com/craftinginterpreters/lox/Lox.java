@@ -8,7 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static com.craftinginterpreters.lox.ErrorCode.EX_USAGE;
+import static com.craftinginterpreters.shared.ErrorCode.EX_DATAERR;
+import static com.craftinginterpreters.shared.ErrorCode.EX_USAGE;
 import static java.lang.String.format;
 
 public final class Lox {
@@ -18,7 +19,7 @@ public final class Lox {
     public static void main (String... args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: jlox [script]");
-            System.exit(EX_USAGE.getCode());
+            System.exit(EX_USAGE);
         } else if (args.length == 1) {
             runFile(args[0]);
         } else {
@@ -29,7 +30,7 @@ public final class Lox {
     public static void runFile (String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
-        if (hadError) System.exit(ErrorCode.EX_DATAERR.getCode());
+        if (hadError) System.exit(EX_DATAERR);
     }
 
     private static void runPrompt () throws IOException {
