@@ -22,8 +22,16 @@ Run interactive prompt:
 ```bash
 ./gradlew run -q --console=plain
 ```
+or
+```bash
+java -jar ./build/libs/jlox-1.0-SNAPSHOT.jar
+```
 
 Run Lox file:
 ```bash
 ./gradlew run --args <lox file>
+```
+or
+```bash
+java -jar ./build/libs/jlox-1.0-SNAPSHOT.jar <lox file>
 ```

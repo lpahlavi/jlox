@@ -25,6 +25,12 @@ application {
     mainClass.set("com.craftinginterpreters.lox.Lox")
 }
 
+tasks.jar {
+    manifest {
+        attributes("Main-Class" to application.mainClass)
+    }
+}
+
 val destinationDirectory = "src/main/java/com/craftinginterpreters/lox"
 val generateAstClassName = "com.craftinginterpreters.tool.GenerateAst"
 val errorCodeClassName = "com.craftinginterpreters.shared.ErrorCode"
