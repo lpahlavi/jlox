@@ -20,27 +20,10 @@ The AST is generated automatically by running `./gradlew build`, it may also exp
 
 Run interactive prompt:
 ```bash
-./gradlew run -q --console=plain
-```
-or
-```bash
-java -jar ./build/libs/jlox-1.0-SNAPSHOT.jar
+./build/install/jlox/bin/jlox
 ```
 
 Run Lox file:
 ```bash
-./gradlew run --args <lox file>
-```
-or
-```bash
-java -jar ./build/libs/jlox-1.0-SNAPSHOT.jar <lox file>
-```
-
-Alternatively, you may create an executable file with:
-```bash
-./gradlew installDist
-```
-and simply execute it
-```bash
-./build/install/jlox/bin/jlox
+./build/install/jlox/bin/jlox <lox file>
 ```

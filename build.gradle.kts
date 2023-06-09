@@ -56,7 +56,7 @@ tasks.named<JavaExec>("run") {
 }
 
 tasks.named("build") {
-    dependsOn("generateAst")
+    dependsOn("generateAst", "installDist")
 }
 
 tasks.test {
