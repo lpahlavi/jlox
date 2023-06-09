@@ -11,18 +11,6 @@ public class Interpreter implements Expr.Visitor<Object> {
         }
     }
 
-    private String stringify(Object object) {
-        if (object == null) return "nil";
-        if (object instanceof Double) {
-            String text = object.toString();
-            if (text.endsWith(".0")) {
-                text = text.substring(0, text.length() - 2);
-            }
-            return text;
-        }
-        return object.toString();
-    }
-
     @Override
     public Object visitBinaryExpr(Expr.Binary expr) {
         Object left = evaluate(expr.left);
@@ -57,11 +45,13 @@ public class Interpreter implements Expr.Visitor<Object> {
                 yield (double) left / (double) right;
             }
             case PLUS -> {
+                // At least one of the operands is a string: either string concatenation, or stringify the non-string
+                // operand and concatenate it with the string operand
+                if (left instanceof String || right instanceof String) {
+                    yield stringify(left) + stringify(right);
+                }
                 if (left instanceof Double leftDouble && right instanceof Double rightDouble) {
                     yield leftDouble + rightDouble;
-                }
-                if (left instanceof String leftString && right instanceof String rightString) {
-                    yield leftString + rightString;
                 }
                 throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
             }
@@ -97,6 +87,18 @@ public class Interpreter implements Expr.Visitor<Object> {
 
     private Object evaluate(Expr expression) {
         return expression.accept(this);
+    }
+
+    private String stringify(Object object) {
+        if (object == null) return "nil";
+        if (object instanceof Double) {
+            String text = object.toString();
+            if (text.endsWith(".0")) {
+                text = text.substring(0, text.length() - 2);
+            }
+            return text;
+        }
+        return object.toString();
     }
 
     private boolean isEqual(Object left, Object right) {
