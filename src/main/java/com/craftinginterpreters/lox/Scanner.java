@@ -71,7 +71,7 @@ public final class Scanner {
                 if (match('/')) {
                     while (peek() != '\n' && !isAtEnd()) advance();
                 // C-style block comments.
-                } if (match('*')) {
+                } else if (match('*')) {
                     blockComment();
                 } else {
                     addToken(SLASH);
