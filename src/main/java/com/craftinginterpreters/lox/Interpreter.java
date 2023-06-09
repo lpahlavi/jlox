@@ -42,6 +42,7 @@ public class Interpreter implements Expr.Visitor<Object> {
             }
             case SLASH -> {
                 checkNumberOperands(expr.operator, left, right);
+                checkNonzeroDenominator(expr.operator, (double) right);
                 yield (double) left / (double) right;
             }
             case PLUS -> {
@@ -122,5 +123,10 @@ public class Interpreter implements Expr.Visitor<Object> {
     private void checkNumberOperand(Token operator, Object operand) {
         if (operand instanceof Double) return;
         throw new RuntimeError(operator, "Operand must be a number.");
+    }
+
+    private void checkNonzeroDenominator(Token operator, double denominator) {
+        if (denominator != 0) return;
+        throw new RuntimeError(operator, "Denominator must be non-zero.");
     }
 }
