@@ -35,3 +35,12 @@ or
 ```bash
 java -jar ./build/libs/jlox-1.0-SNAPSHOT.jar <lox file>
 ```
+
+Alternatively, you may create an executable file with:
+```bash
+./gradlew installDist
+```
+and simply execute it
+```bash
+./build/install/jlox/bin/jlox
+```

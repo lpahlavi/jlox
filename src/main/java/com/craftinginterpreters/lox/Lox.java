@@ -8,13 +8,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static com.craftinginterpreters.shared.ErrorCode.EX_DATAERR;
-import static com.craftinginterpreters.shared.ErrorCode.EX_USAGE;
+import static com.craftinginterpreters.shared.ErrorCode.*;
 import static java.lang.String.format;
 
 public final class Lox {
+    private static final Interpreter interpreter = new Interpreter();
 
     static boolean hadError = false;
+    static boolean hadRuntimeError = false;
 
     public static void main (String... args) throws IOException {
         if (args.length > 1) {
@@ -31,6 +32,7 @@ public final class Lox {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
         if (hadError) System.exit(EX_DATAERR);
+        if (hadRuntimeError) System.exit(EX_SOFTWARE);
     }
 
     private static void runPrompt () throws IOException {
@@ -58,6 +60,7 @@ public final class Lox {
         if (hadError) return;
 
         System.out.println(new AstPrinter().print(expression));
+        interpreter.interpret(expression);
     }
 
     public static void error (int line, String message) {
@@ -75,5 +78,10 @@ public final class Lox {
     private static void report (int line, String where, String message) {
         System.err.printf("[line %d] Error %s: %s%n", line, where, message);
         hadError = true;
+    }
+
+    public static void runtimeError(RuntimeError error) {
+        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
     }
 }
