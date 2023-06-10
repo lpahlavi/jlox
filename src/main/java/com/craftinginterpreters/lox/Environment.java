@@ -17,4 +17,12 @@ public final class Environment {
         // Note: this allows variable re-definition since we do not check for existence!
         values.put(name, value);
     }
+
+    public void assign(Token name, Object value) {
+        if (values.containsKey(name.lexeme)) {
+            values.put(name.lexeme, value);
+            return;
+        }
+        throw new RuntimeError(name, String.format("Undefined variable '%s'.", name.lexeme));
+    }
 }

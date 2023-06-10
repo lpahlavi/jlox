@@ -60,7 +60,26 @@ public final class Parser {
     }
 
     private Expr expression () {
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment() {
+        // Assignment targets are always valid standalone expressions: evaluate the left-hand side of the assignment
+        // expression and check if it is a valid assignment target later.
+        Expr expr = equality();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment(); // The assignment value.
+
+            if (expr instanceof Expr.Variable variableExpr) {
+                Token name = variableExpr.name;
+                return new Expr.Assign(name, value);
+            }
+
+            error(equals, "Invalid assignment target.");
+        }
+        return expr;
     }
 
     private Expr equality () {
